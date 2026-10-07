@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Profile | Energy Control</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #06152b, #0b2342, #07111f);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(5,15,30,0.96);
+        padding: 25px 15px;
+        border-right: 1px solid rgba(0,217,255,0.2);
+    }
+
+    .logo {
+        text-align: center;
+        color: #00d9ff;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .menu button {
+        width: 100%;
+        padding: 14px;
+        margin: 6px 0;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: rgba(0,217,255,0.18);
+        transform: translateX(4px);
+    }
+
+    .menu .active {
+        background: rgba(0,217,255,0.22);
+        border-left: 3px solid #00d9ff;
+    }
+
+    .main {
+        margin-left: 250px;
+        padding: 35px;
+        max-width: 1250px;
+    }
+
+    .header h1 {
+        color: #00d9ff;
+        font-size: 32px;
+    }
+
+    .header p {
+        color: #9db2c9;
+        margin-top: 8px;
+        margin-bottom: 30px;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 330px 1fr;
+        gap: 25px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,217,255,0.15);
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .profile-card {
+        text-align: center;
+    }
+
+    .avatar {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#008cff,#00d9ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 55px;
+        box-shadow: 0 0 30px rgba(0,217,255,0.3);
+    }
+
+    .profile-card h2 {
+        color: white;
+        margin-bottom: 8px;
+    }
+
+    .role {
+        color: #00d9ff;
+        margin-bottom: 20px;
+    }
+
+    .online {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 20px;
+        background: rgba(0,255,136,0.12);
+        color: #00ff88;
+        font-size: 13px;
+    }
+
+    .details {
+        margin-top: 25px;
+        text-align: left;
+    }
+
+    .detail {
+        padding: 13px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .detail:last-child {
+        border-bottom: none;
+    }
+
+    .detail-title {
+        color: #849bb2;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        color: white;
+    }
+
+    .section-title {
+        color: #00d9ff;
+        margin-bottom: 20px;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stat {
+        background: rgba(255,255,255,0.04);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .stat-icon {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        color: #00d9ff;
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    .stat-name {
+        color: #8ea4ba;
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    .modules {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .module {
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.04);
+        border-left: 3px solid #00d9ff;
+    }
+
+    .module-name {
+        font-weight: bold;
+    }
+
+    .module-status {
+        color: #00ff88;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .system {
+        margin-top: 25px;
+    }
+
+    .system-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .system-row:last-child {
+        border-bottom: none;
+    }
+
+    .ok {
+        color: #00ff88;
+    }
+
+    .logout {
+        margin-top: 25px;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: #d83b3b;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .logout:hover {
+        opacity: 0.85;
+    }
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 200px;
+        }
+
+        .main {
+            margin-left: 200px;
+        }
+
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+        }
+
+        .modules {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+```
+<div class="logo">
+    ⚡ ENERGY CONTROL
+</div>
+
+<div class="menu">
+
+    <button onclick="location.href='dashboard.html'">
+        🏠 Dashboard
+    </button>
+
+    <button onclick="location.href='stations.html'">
+        ⚡ Электр станциялары
+    </button>
+
+    <button onclick="location.href='smartgrid.html'">
+        🔌 Smart Grid
+    </button>
+
+    <button onclick="location.href='scada.html'">
+        🖥️ SCADA
+    </button>
+
+    <button onclick="location.href='calculator.html'">
+        🧮 Калькулятор
+    </button>
+
+    <button onclick="location.href='lab.html'">
+        🧪 Лаборатория
+    </button>
+
+    <button onclick="location.href='test.html'">
+        📝 Тест
+    </button>
+
+    <button class="active">
+        👤 Profile
+    </button>
+
+</div>
+```
+
+</div>
+
+<div class="main">
+
+```
+<div class="header">
+
+    <h1>👤 Student Profile</h1>
+
+    <p>
+        ENERGY CONTROL CENTER — жүйедегі студент профилі
+    </p>
+
+</div>
+
+
+<div class="profile-grid">
+
+
+    <!-- PROFILE -->
+
+    <div class="card profile-card">
+
+        <div class="avatar">
+            👨‍🎓
+        </div>
+
+        <h2>Student</h2>
+
+        <div class="role">
+            Electrical Engineering Student
+        </div>
+
+        <div class="online">
+            🟢 ONLINE
+        </div>
+
+
+        <div class="details">
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    USERNAME
+                </div>
+
+                <div class="detail-value">
+                    student
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    PROJECT
+                </div>
+
+                <div class="detail-value">
+                    Energy Control Center
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    FIELD
+                </div>
+
+                <div class="detail-value">
+                    Electrical Energy
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-title">
+                    ACCESS
+                </div>
+
+                <div class="detail-value">
+                    Full Student Access
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button class="logout" onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+
+    <!-- INFORMATION -->
+
+    <div>
+
+
+        <div class="card">
+
+            <h2 class="section-title">
+                📊 Project Statistics
+            </h2>
+
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        📄
+                    </div>
+
+                    <div class="stat-value">
+                        8
+                    </div>
+
+                    <div class="stat-name">
+                        Modules
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        ⚡
+                    </div>
+
+                    <div class="stat-value">
+                        LIVE
+                    </div>
+
+                    <div class="stat-name">
+                        System
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-icon">
+                        🟢
+                    </div>
+
+                    <div class="stat-value">
+                        100%
+                    </div>
+
+                    <div class="stat-name">
+                        System Health
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <h2 class="section-title">
+                🧩 Available Modules
+            </h2>
+
+
+            <div class="modules">
+
+                <div class="module">
+                    ⚡ Electrical Stations
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+                <div class="module">
+                    🔌 Smart Grid
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+                <div class="module">
+                    🖥️ SCADA
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+                <div class="module">
+                    🧮 Electrical Calculator
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+                <div class="module">
+                    🧪 Virtual Laboratory
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+                <div class="module">
+                    📝 Interactive Test
+                    <div class="module-status">● ACTIVE</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card system">
+
+            <h2 class="section-title">
+                🖥️ System Status
+            </h2>
+
+
+            <div class="system-row">
+                <span>Database</span>
+                <span class="ok">● ONLINE</span>
+            </div>
+
+            <div class="system-row">
+                <span>SCADA Connection</span>
+                <span class="ok">● CONNECTED</span>
+            </div>
+
+            <div class="system-row">
+                <span>Smart Grid</span>
+                <span class="ok">● ACTIVE</span>
+            </div>
+
+            <div class="system-row">
+                <span>Protection System</span>
+                <span class="ok">● NORMAL</span>
+            </div>
+
+            <div class="system-row">
+                <span>Network</span>
+                <span class="ok">● STABLE</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+function logout() {
+
+    window.location.href = "index.html";
+
+}
+
+</script>
+
+</body>
+</html>

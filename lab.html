@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Virtual Laboratory | Energy Control</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #06152b, #0b2342, #07111f);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(5, 15, 30, 0.95);
+        padding: 25px 15px;
+        border-right: 1px solid rgba(0, 200, 255, 0.2);
+    }
+
+    .logo {
+        text-align: center;
+        color: #00d9ff;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .menu button {
+        width: 100%;
+        padding: 14px;
+        margin: 6px 0;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: rgba(0, 200, 255, 0.2);
+        transform: translateX(4px);
+    }
+
+    .menu .active {
+        background: rgba(0, 200, 255, 0.25);
+        border-left: 3px solid #00d9ff;
+    }
+
+    .main {
+        margin-left: 250px;
+        padding: 35px;
+    }
+
+    .header {
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        color: #00d9ff;
+    }
+
+    .header p {
+        margin-top: 8px;
+        color: #9db2c9;
+    }
+
+    .laboratory {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,217,255,0.15);
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .card h2 {
+        color: #00d9ff;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #b9cce0;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #31506d;
+        border-radius: 9px;
+        background: #091a2e;
+        color: white;
+        font-size: 16px;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: #00d9ff;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 13px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .start {
+        background: #00c878;
+        color: white;
+    }
+
+    .stop {
+        background: #d83b3b;
+        color: white;
+    }
+
+    .calculate {
+        background: #008cff;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+        transform: scale(1.02);
+    }
+
+    .results {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .result {
+        background: rgba(0,0,0,0.25);
+        padding: 18px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .result span {
+        display: block;
+        font-size: 28px;
+        color: #00d9ff;
+        margin-top: 8px;
+        font-weight: bold;
+    }
+
+    .status {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        background: rgba(216,59,59,0.15);
+        color: #ff7777;
+        font-weight: bold;
+    }
+
+    /* Электр тізбегі */
+
+    .circuit {
+        position: relative;
+        height: 360px;
+        margin-top: 10px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .wire {
+        position: absolute;
+        background: #52677c;
+        transition: 0.5s;
+    }
+
+    .wire.active {
+        background: #00ff88;
+        box-shadow: 0 0 12px #00ff88;
+    }
+
+    .wire.top {
+        width: 70%;
+        height: 5px;
+        top: 80px;
+        left: 15%;
+    }
+
+    .wire.bottom {
+        width: 70%;
+        height: 5px;
+        bottom: 80px;
+        left: 15%;
+    }
+
+    .wire.left {
+        width: 5px;
+        height: 240px;
+        left: 15%;
+        top: 80px;
+    }
+
+    .wire.right {
+        width: 5px;
+        height: 240px;
+        right: 15%;
+        top: 80px;
+    }
+
+    .component {
+        position: absolute;
+        background: #10263e;
+        border: 2px solid #55708c;
+        border-radius: 12px;
+        padding: 15px;
+        min-width: 90px;
+        text-align: center;
+        font-weight: bold;
+        transition: 0.4s;
+    }
+
+    .component.active {
+        border-color: #00ff88;
+        box-shadow: 0 0 20px rgba(0,255,136,0.5);
+    }
+
+    .battery {
+        left: 9%;
+        top: 145px;
+    }
+
+    .resistor {
+        left: 43%;
+        top: 45px;
+    }
+
+    .ammeter {
+        right: 8%;
+        top: 145px;
+    }
+
+    .lamp {
+        left: 43%;
+        bottom: 45px;
+    }
+
+    .lamp-light {
+        font-size: 30px;
+        display: block;
+    }
+
+    .formula {
+        margin-top: 25px;
+        background: rgba(0,217,255,0.08);
+        border-left: 4px solid #00d9ff;
+        padding: 18px;
+        border-radius: 10px;
+        line-height: 1.8;
+    }
+
+    .info {
+        margin-top: 25px;
+        padding: 20px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 15px;
+    }
+
+    .info h2 {
+        color: #00d9ff;
+        margin-bottom: 12px;
+    }
+
+    @media (max-width: 900px) {
+        .sidebar {
+            width: 200px;
+        }
+
+        .main {
+            margin-left: 200px;
+        }
+
+        .laboratory {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+```
+<div class="logo">
+    ⚡ ENERGY CONTROL
+</div>
+
+<div class="menu">
+
+    <button onclick="location.href='dashboard.html'">
+        🏠 Dashboard
+    </button>
+
+    <button onclick="location.href='stations.html'">
+        ⚡ Электр станциялары
+    </button>
+
+    <button onclick="location.href='smartgrid.html'">
+        🔌 Smart Grid
+    </button>
+
+    <button onclick="location.href='scada.html'">
+        🖥️ SCADA
+    </button>
+
+    <button onclick="location.href='calculator.html'">
+        🧮 Калькулятор
+    </button>
+
+    <button class="active">
+        🧪 Лаборатория
+    </button>
+
+    <button onclick="location.href='test.html'">
+        📝 Тест
+    </button>
+
+</div>
+```
+
+</div>
+
+<div class="main">
+
+```
+<div class="header">
+    <h1>🧪 Virtual Electrical Laboratory</h1>
+    <p>Виртуалды электр тізбегін зерттеу және электр параметрлерін есептеу</p>
+</div>
+
+
+<div class="laboratory">
+
+    <!-- Параметрлер -->
+
+    <div class="card">
+
+        <h2>⚙️ Параметрлер</h2>
+
+        <div class="input-group">
+            <label>Кернеу U (V)</label>
+            <input type="number" id="voltage" value="220">
+        </div>
+
+        <div class="input-group">
+            <label>Кедергі R (Ω)</label>
+            <input type="number" id="resistance" value="10">
+        </div>
+
+        <div class="buttons">
+
+            <button class="btn calculate" onclick="calculate()">
+                🧮 Есептеу
+            </button>
+
+            <button class="btn start" onclick="startCircuit()">
+                ▶ Қосу
+            </button>
+
+            <button class="btn stop" onclick="stopCircuit()">
+                ■ Өшіру
+            </button>
+
+        </div>
+
+        <div class="results">
+
+            <div class="result">
+                Ток I
+                <span id="current">0 A</span>
+            </div>
+
+            <div class="result">
+                Қуат P
+                <span id="power">0 W</span>
+            </div>
+
+        </div>
+
+        <div class="status" id="status">
+            🔴 CIRCUIT OFF — Тізбек өшірулі
+        </div>
+
+    </div>
+
+
+    <!-- Электр схемасы -->
+
+    <div class="card">
+
+        <h2>⚡ Виртуалды электр тізбегі</h2>
+
+        <div class="circuit">
+
+            <div class="wire top" id="wireTop"></div>
+            <div class="wire bottom" id="wireBottom"></div>
+            <div class="wire left" id="wireLeft"></div>
+            <div class="wire right" id="wireRight"></div>
+
+            <div class="component battery" id="battery">
+                🔋
+                <br>
+                SOURCE
+            </div>
+
+            <div class="component resistor" id="resistorBox">
+                Ω
+                <br>
+                RESISTOR
+            </div>
+
+            <div class="component ammeter" id="ammeter">
+                A
+                <br>
+                AMMETER
+            </div>
+
+            <div class="component lamp" id="lamp">
+                <span class="lamp-light">💡</span>
+                LOAD
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="formula">
+
+    <h2>📐 Негізгі формулалар</h2>
+
+    <p><b>Ohm's Law:</b> I = U / R</p>
+
+    <p><b>Electrical Power:</b> P = U × I</p>
+
+    <p><b>Resistance:</b> R = U / I</p>
+
+</div>
+
+
+<div class="info">
+
+    <h2>📚 Зертханалық жұмыс туралы</h2>
+
+    <p>
+        Бұл виртуалды зертхана электр тізбегінің негізгі параметрлерін
+        тәжірибе жүзінде зерттеуге мүмкіндік береді.
+    </p>
+
+    <br>
+
+    <p>
+        Кернеу мен кедергіні өзгерткен кезде жүйе Ом заңы бойынша
+        ток күшін автоматты түрде есептейді. Сонымен қатар электр
+        қуаты анықталады.
+    </p>
+
+    <br>
+
+    <p>
+        «Қосу» батырмасын басқанда виртуалды электр тізбегі іске қосылып,
+        өткізгіштер жасыл түске өзгереді. «Өшіру» батырмасы тізбекті
+        тоқтатады.
+    </p>
+
+</div>
+```
+
+</div>
+
+<script>
+
+function calculate() {
+
+    let U = Number(document.getElementById("voltage").value);
+    let R = Number(document.getElementById("resistance").value);
+
+    if (U <= 0 || R <= 0) {
+        alert("Кернеу мен кедергі 0-ден үлкен болуы керек!");
+        return;
+    }
+
+    let I = U / R;
+    let P = U * I;
+
+    document.getElementById("current").innerText =
+        I.toFixed(2) + " A";
+
+    document.getElementById("power").innerText =
+        P.toFixed(2) + " W";
+}
+
+
+function startCircuit() {
+
+    calculate();
+
+    document.getElementById("status").innerHTML =
+        "🟢 CIRCUIT ACTIVE — Тізбек жұмыс істеп тұр";
+
+    document.getElementById("status").style.background =
+        "rgba(0,200,120,0.15)";
+
+    document.getElementById("status").style.color =
+        "#00ff88";
+
+    document.querySelectorAll(".wire").forEach(function(wire) {
+        wire.classList.add("active");
+    });
+
+    document.querySelectorAll(".component").forEach(function(component) {
+        component.classList.add("active");
+    });
+}
+
+
+function stopCircuit() {
+
+    document.getElementById("status").innerHTML =
+        "🔴 CIRCUIT OFF — Тізбек өшірулі";
+
+    document.getElementById("status").style.background =
+        "rgba(216,59,59,0.15)";
+
+    document.getElementById("status").style.color =
+        "#ff7777";
+
+    document.querySelectorAll(".wire").forEach(function(wire) {
+        wire.classList.remove("active");
+    });
+
+    document.querySelectorAll(".component").forEach(function(component) {
+        component.classList.remove("active");
+    });
+}
+
+</script>
+
+</body>
+</html>

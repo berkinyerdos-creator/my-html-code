@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Energy Control Center</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #06152e, #0b2d52, #071b36);
+        overflow: hidden;
+        color: white;
+    }
+
+    /* Электр бөлшектері */
+    .electric {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: #00eaff;
+        border-radius: 50%;
+        box-shadow: 0 0 15px #00eaff;
+        animation: move 5s linear infinite;
+    }
+
+    .e1 {
+        left: 10%;
+        top: 20%;
+        animation-delay: 0s;
+    }
+
+    .e2 {
+        left: 80%;
+        top: 30%;
+        animation-delay: 1s;
+    }
+
+    .e3 {
+        left: 25%;
+        top: 80%;
+        animation-delay: 2s;
+    }
+
+    .e4 {
+        left: 70%;
+        top: 75%;
+        animation-delay: 3s;
+    }
+
+    @keyframes move {
+        0% {
+            transform: translateY(0) scale(1);
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-150px) scale(2);
+            opacity: 0;
+        }
+    }
+
+    /* Login терезесі */
+    .login-box {
+        width: 390px;
+        padding: 40px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 0 40px rgba(0, 200, 255, 0.25);
+        text-align: center;
+        z-index: 10;
+    }
+
+    .logo {
+        font-size: 55px;
+        margin-bottom: 10px;
+    }
+
+    h1 {
+        font-size: 27px;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        color: #9db8d5;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .input-box {
+        margin-bottom: 18px;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 7px;
+        color: #bcd0e5;
+        font-size: 14px;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        outline: none;
+        background: rgba(0, 0, 0, 0.25);
+        color: white;
+        font-size: 15px;
+    }
+
+    input:focus {
+        border-color: #00d9ff;
+        box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #007bff, #00d9ff);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    }
+
+    #error {
+        color: #ff6b6b;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+    }
+
+    .info {
+        margin-top: 25px;
+        font-size: 12px;
+        color: #7794b2;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<!-- Электр анимациялары -->
+<div class="electric e1"></div>
+<div class="electric e2"></div>
+<div class="electric e3"></div>
+<div class="electric e4"></div>
+
+<!-- Login -->
+<div class="login-box">
+
+    <div class="logo">⚡</div>
+
+    <h1>ENERGY CONTROL</h1>
+
+    <p class="subtitle">
+        Smart Energy Management System
+    </p>
+
+    <div class="input-box">
+        <label>👤 Логин</label>
+        <input
+            type="text"
+            id="username"
+            placeholder="Логинді енгізіңіз"
+        >
+    </div>
+
+    <div class="input-box">
+        <label>🔑 Пароль</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Парольді енгізіңіз"
+        >
+    </div>
+
+    <button onclick="login()">
+        ⚡ ЖҮЙЕГЕ КІРУ
+    </button>
+
+    <p id="error"></p>
+
+    <div class="info">
+        Electrical Energy Management Platform
+    </div>
+
+</div>
+
+<script>
+
+    function login() {
+
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        /*
+            Уақытша логин және пароль:
+
+            Логин: student
+            Пароль: 12345
+        */
+
+        if (username === "student" && password === "12345") {
+
+            window.location.href = "dashboard.html";
+
+        } else {
+
+            document.getElementById("error").innerText =
+                "❌ Логин немесе пароль қате!";
+
+        }
+    }
+
+</script>
+```
+
+</body>
+</html>

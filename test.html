@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Interactive Test | Energy Control</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #06152b, #0b2342, #07111f);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(5, 15, 30, 0.96);
+        padding: 25px 15px;
+        border-right: 1px solid rgba(0, 200, 255, 0.2);
+    }
+
+    .logo {
+        text-align: center;
+        color: #00d9ff;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .menu button {
+        width: 100%;
+        padding: 14px;
+        margin: 6px 0;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: rgba(0, 200, 255, 0.2);
+        transform: translateX(4px);
+    }
+
+    .menu .active {
+        background: rgba(0, 200, 255, 0.25);
+        border-left: 3px solid #00d9ff;
+    }
+
+    .main {
+        margin-left: 250px;
+        padding: 35px;
+        max-width: 1200px;
+    }
+
+    .header {
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        color: #00d9ff;
+    }
+
+    .header p {
+        color: #9db2c9;
+        margin-top: 8px;
+    }
+
+    .test-box {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,217,255,0.15);
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .progress {
+        width: 100%;
+        height: 10px;
+        background: #172b40;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: #00d9ff;
+        transition: 0.4s;
+    }
+
+    .question-number {
+        color: #00d9ff;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .question {
+        font-size: 23px;
+        line-height: 1.4;
+        margin-bottom: 25px;
+    }
+
+    .answers {
+        display: grid;
+        gap: 12px;
+    }
+
+    .answer {
+        width: 100%;
+        padding: 16px;
+        border: 1px solid #34516b;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.04);
+        color: white;
+        cursor: pointer;
+        text-align: left;
+        font-size: 16px;
+        transition: 0.25s;
+    }
+
+    .answer:hover {
+        background: rgba(0,217,255,0.12);
+        border-color: #00d9ff;
+    }
+
+    .answer.selected {
+        background: rgba(0,217,255,0.22);
+        border-color: #00d9ff;
+    }
+
+    .next-btn {
+        margin-top: 25px;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 10px;
+        background: #008cff;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .next-btn:hover {
+        opacity: 0.85;
+    }
+
+    .next-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .result {
+        display: none;
+        text-align: center;
+        padding: 30px;
+    }
+
+    .result-icon {
+        font-size: 70px;
+        margin-bottom: 15px;
+    }
+
+    .result h2 {
+        color: #00d9ff;
+        font-size: 32px;
+        margin-bottom: 15px;
+    }
+
+    .score {
+        font-size: 55px;
+        font-weight: bold;
+        color: #00ff88;
+        margin: 20px;
+    }
+
+    .result-text {
+        font-size: 20px;
+        color: #b9cce0;
+        margin-bottom: 25px;
+    }
+
+    .restart {
+        padding: 14px 30px;
+        border: none;
+        border-radius: 10px;
+        background: #00c878;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .info-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .info-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .info-card span {
+        display: block;
+        font-size: 25px;
+        color: #00d9ff;
+        margin-bottom: 8px;
+    }
+
+    @media (max-width: 800px) {
+        .sidebar {
+            width: 200px;
+        }
+
+        .main {
+            margin-left: 200px;
+        }
+
+        .info-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+```
+<div class="logo">
+    ⚡ ENERGY CONTROL
+</div>
+
+<div class="menu">
+
+    <button onclick="location.href='dashboard.html'">
+        🏠 Dashboard
+    </button>
+
+    <button onclick="location.href='stations.html'">
+        ⚡ Электр станциялары
+    </button>
+
+    <button onclick="location.href='smartgrid.html'">
+        🔌 Smart Grid
+    </button>
+
+    <button onclick="location.href='scada.html'">
+        🖥️ SCADA
+    </button>
+
+    <button onclick="location.href='calculator.html'">
+        🧮 Калькулятор
+    </button>
+
+    <button onclick="location.href='lab.html'">
+        🧪 Лаборатория
+    </button>
+
+    <button class="active">
+        📝 Тест
+    </button>
+
+</div>
+```
+
+</div>
+
+<div class="main">
+
+```
+<div class="header">
+    <h1>📝 Interactive Electrical Test</h1>
+    <p>Электр энергетикасы бойынша біліміңді тексер</p>
+</div>
+
+
+<div class="test-box">
+
+    <div id="test">
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="question-number" id="questionNumber"></div>
+
+        <div class="question" id="question"></div>
+
+        <div class="answers" id="answers"></div>
+
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>
+            Келесі →
+        </button>
+
+    </div>
+
+
+    <div class="result" id="result">
+
+        <div class="result-icon" id="resultIcon">
+            🏆
+        </div>
+
+        <h2>Тест аяқталды!</h2>
+
+        <div class="score" id="score">
+            0 / 10
+        </div>
+
+        <div class="result-text" id="resultText"></div>
+
+        <button class="restart" onclick="restartTest()">
+            🔄 Қайта тапсыру
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="info-cards">
+
+    <div class="info-card">
+        <span>📚</span>
+        10 сұрақ
+    </div>
+
+    <div class="info-card">
+        <span>⚡</span>
+        Электр энергетикасы
+    </div>
+
+    <div class="info-card">
+        <span>🏆</span>
+        Автоматты нәтиже
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+const questions = [
+
+    {
+        question: "Электр қуатының негізгі формуласы қандай?",
+        answers: [
+            "P = U × I",
+            "P = R / I",
+            "P = U / R",
+            "P = I / U"
+        ],
+        correct: 0
+    },
+
+    {
+        question: "Кернеудің өлшем бірлігі қандай?",
+        answers: [
+            "Ампер (A)",
+            "Ом (Ω)",
+            "Вольт (V)",
+            "Ватт (W)"
+        ],
+        correct: 2
+    },
+
+    {
+        question: "Ток күшінің өлшем бірлігі қандай?",
+        answers: [
+            "Вольт",
+            "Ампер",
+            "Ом",
+            "Ватт"
+        ],
+        correct: 1
+    },
+
+    {
+        question: "Кедергінің өлшем бірлігі қандай?",
+        answers: [
+            "Ом",
+            "Ампер",
+            "Вольт",
+            "Джоуль"
+        ],
+        correct: 0
+    },
+
+    {
+        question: "Ом заңының формуласы қандай?",
+        answers: [
+            "I = U / R",
+            "I = U × R",
+            "I = R / U",
+            "I = P × U"
+        ],
+        correct: 0
+    },
+
+    {
+        question: "SCADA жүйесінің негізгі қызметі қандай?",
+        answers: [
+            "Музыка ойнату",
+            "Электр жүйесін бақылау және басқару",
+            "Мәтін жазу",
+            "Сурет өңдеу"
+        ],
+        correct: 1
+    },
+
+    {
+        question: "Smart Grid дегеніміз не?",
+        answers: [
+            "Ақылды электр желісі",
+            "Компьютер ойыны",
+            "Тек күн панельдері",
+            "Электр қозғалтқышы"
+        ],
+        correct: 0
+    },
+
+    {
+        question: "Гидроэлектр станциясы энергияны негізінен неден алады?",
+        answers: [
+            "Көмірден",
+            "Желден",
+            "Судың қозғалысынан",
+            "Газдан"
+        ],
+        correct: 2
+    },
+
+    {
+        question: "Электр энергиясын тұтынушыға жеткізуде трансформатор не үшін қолданылады?",
+        answers: [
+            "Кернеуді өзгерту үшін",
+            "Суды жылыту үшін",
+            "Компьютерді қосу үшін",
+            "Жарық түсіру үшін"
+        ],
+        correct: 0
+    },
+
+    {
+        question: "Электр энергиясының жұмысының формуласы қандай?",
+        answers: [
+            "W = P × t",
+            "W = U / I",
+            "W = R × I",
+            "W = U + R"
+        ],
+        correct: 0
+    }
+
+];
+
+
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = null;
+
+
+function showQuestion() {
+
+    selectedAnswer = null;
+
+    let q = questions[currentQuestion];
+
+    document.getElementById("questionNumber").innerText =
+        "Сұрақ " + (currentQuestion + 1) + " / " + questions.length;
+
+    document.getElementById("question").innerText =
+        q.question;
+
+    let answersContainer =
+        document.getElementById("answers");
+
+    answersContainer.innerHTML = "";
+
+    q.answers.forEach(function(answer, index) {
+
+        let button = document.createElement("button");
+
+        button.className = "answer";
+        button.innerText =
+            String.fromCharCode(65 + index) + ") " + answer;
+
+        button.onclick = function() {
+            selectAnswer(index, button);
+        };
+
+        answersContainer.appendChild(button);
+
+    });
+
+    document.getElementById("nextBtn").disabled = true;
+
+    let progress =
+        (currentQuestion / questions.length) * 100;
+
+    document.getElementById("progressBar").style.width =
+        progress + "%";
+}
+
+
+function selectAnswer(index, button) {
+
+    selectedAnswer = index;
+
+    document.querySelectorAll(".answer").forEach(function(btn) {
+        btn.classList.remove("selected");
+    });
+
+    button.classList.add("selected");
+
+    document.getElementById("nextBtn").disabled = false;
+}
+
+
+function nextQuestion() {
+
+    if (selectedAnswer === null) {
+        return;
+    }
+
+    if (selectedAnswer === questions[currentQuestion].correct) {
+        score++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+
+        showQuestion();
+
+    } else {
+
+        showResult();
+
+    }
+}
+
+
+function showResult() {
+
+    document.getElementById("test").style.display = "none";
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("progressBar").style.width = "100%";
+
+    document.getElementById("score").innerText =
+        score + " / " + questions.length;
+
+    let percent =
+        Math.round((score / questions.length) * 100);
+
+    let text = "";
+
+    if (percent === 100) {
+
+        document.getElementById("resultIcon").innerText = "🏆";
+
+        text = "Керемет! Сен электр энергетикасын өте жақсы меңгергенсің!";
+
+    } else if (percent >= 80) {
+
+        document.getElementById("resultIcon").innerText = "🥇";
+
+        text = "Өте жақсы нәтиже! Білімің жоғары деңгейде.";
+
+    } else if (percent >= 60) {
+
+        document.getElementById("resultIcon").innerText = "🥈";
+
+        text = "Жақсы нәтиже! Бірақ тақырыптарды тағы бір қайталап шық.";
+
+    } else {
+
+        document.getElementById("resultIcon").innerText = "📚";
+
+        text = "Тақырыптарды тағы бір қарап шығып, тестті қайта тапсыр.";
+
+    }
+
+    document.getElementById("resultText").innerText =
+        text + " Нәтиже: " + percent + "%.";
+
+}
+
+
+function restartTest() {
+
+    currentQuestion = 0;
+    score = 0;
+    selectedAnswer = null;
+
+    document.getElementById("result").style.display = "none";
+
+    document.getElementById("test").style.display = "block";
+
+    showQuestion();
+}
+
+
+showQuestion();
+
+</script>
+
+</body>
+</html>

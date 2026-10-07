@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+<html lang="kk">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Электр станциялары | Energy Control</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #071525;
+        color: white;
+    }
+
+    /* ===== SIDEBAR ===== */
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+
+        width: 250px;
+        height: 100vh;
+
+        background: #091d32;
+
+        border-right: 1px solid #173958;
+
+        padding: 25px 15px;
+    }
+
+    .logo {
+        text-align: center;
+
+        font-size: 22px;
+
+        font-weight: bold;
+
+        margin-bottom: 35px;
+
+        color: #00d9ff;
+    }
+
+    .logo span {
+        color: white;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin: 8px 0;
+    }
+
+    .menu button {
+        width: 100%;
+
+        padding: 14px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: transparent;
+
+        color: #a9bed3;
+
+        text-align: left;
+
+        font-size: 15px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: #103552;
+
+        color: #00d9ff;
+    }
+
+    .menu .active {
+        background: #103552;
+
+        color: #00d9ff;
+    }
+
+    .logout {
+        position: absolute;
+
+        bottom: 25px;
+
+        left: 15px;
+
+        width: 220px;
+
+        padding: 12px;
+
+        border: 1px solid #244764;
+
+        border-radius: 10px;
+
+        background: transparent;
+
+        color: #ff7272;
+
+        cursor: pointer;
+    }
+
+    /* ===== MAIN ===== */
+
+    .main {
+        margin-left: 250px;
+
+        padding: 35px;
+    }
+
+    .header {
+        margin-bottom: 35px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        color: #7894ad;
+
+        font-size: 15px;
+    }
+
+    /* ===== CARDS ===== */
+
+    .stations {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 25px;
+    }
+
+    .station-card {
+        background: #0b2137;
+
+        border: 1px solid #173b59;
+
+        border-radius: 18px;
+
+        overflow: hidden;
+
+        transition: 0.3s;
+    }
+
+    .station-card:hover {
+        transform: translateY(-7px);
+
+        border-color: #00cfff;
+
+        box-shadow:
+            0 15px 35px
+            rgba(0, 200, 255, 0.12);
+    }
+
+    /* ===== IMAGE ===== */
+
+    .station-image {
+        width: 100%;
+
+        height: 190px;
+
+        object-fit: cover;
+
+        display: block;
+    }
+
+    /* ===== CARD CONTENT ===== */
+
+    .station-content {
+        padding: 20px;
+    }
+
+    .station-content h2 {
+        font-size: 20px;
+
+        margin-bottom: 10px;
+    }
+
+    .station-content p {
+        color: #91a9be;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+
+        margin-bottom: 15px;
+    }
+
+    .info {
+        display: flex;
+
+        justify-content:
+            space-between;
+
+        padding-top: 12px;
+
+        border-top:
+            1px solid #17364f;
+
+        color: #7e9ab0;
+
+        font-size: 13px;
+    }
+
+    .info strong {
+        color: #00d9ff;
+    }
+
+    /* ===== RESPONSIVE ===== */
+
+    @media (max-width: 1100px) {
+
+        .stations {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+    }
+
+    @media (max-width: 750px) {
+
+        .sidebar {
+            position: relative;
+
+            width: 100%;
+
+            height: auto;
+        }
+
+        .logout {
+            position: relative;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+        .main {
+            margin-left: 0;
+        }
+
+        .stations {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+
+<aside class="sidebar">
+
+```
+<div class="logo">
+    ⚡ <span>ENERGY</span>
+</div>
+
+
+<ul class="menu">
+
+    <li>
+
+        <button
+            onclick="location.href='dashboard.html'">
+
+            🏠 Dashboard
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button class="active">
+
+            ⚡ Электр станциялары
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='smartgrid.html'">
+
+            🔌 Smart Grid
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='scada.html'">
+            🖥️ SCADA
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='calculator.html'">
+
+            🧮 Калькулятор
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='lab.html'">
+
+            🧪 Лаборатория
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='test.html'">
+
+            📝 Тест
+
+        </button>
+
+    </li>
+
+</ul>
+
+
+<button
+    class="logout"
+    onclick="location.href='index.html'">
+
+    🚪 Шығу
+
+</button>
+```
+
+</aside>
+
+<!-- ===== MAIN ===== -->
+
+<main class="main">
+
+```
+<div class="header">
+
+    <h1>
+        ⚡ Электр станциялары
+    </h1>
+
+    <p>
+        Электр энергиясын өндіретін негізгі
+        станция түрлері
+    </p>
+
+</div>
+
+
+<!-- ===== STATIONS ===== -->
+
+<div class="stations">
+
+
+    <!-- 1 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/thermal.jpg"
+            alt="Жылу электр станциясы"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                🔥 Жылу электр станциясы
+            </h2>
+
+            <p>
+                Жылу электр станциясы отынның
+                химиялық энергиясын жылу және
+                одан кейін электр энергиясына
+                түрлендіреді.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>ЖЭС</strong>
+                </span>
+
+                <span>
+                    Қуаты:
+                    <strong>1000 MW</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- 2 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/hydro.jpg"
+            alt="Су электр станциясы"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                💧 Су электр станциясы
+            </h2>
+
+            <p>
+                Су электр станциясы өзен немесе
+                су қоймасындағы судың механикалық
+                энергиясын электр энергиясына
+                айналдырады.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>СЭС</strong>
+                </span>
+
+                <span>
+                    Қуаты:
+                    <strong>500 MW</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- 3 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/solar.jpg"
+            alt="Күн электр станциясы"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                ☀️ Күн электр станциясы
+            </h2>
+
+            <p>
+                Күн электр станциясы күн сәулесін
+                фотоэлектрлік панельдер арқылы
+                электр энергиясына түрлендіреді.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>КЭС</strong>
+                </span>
+
+                <span>
+                    Қуаты:
+                    <strong>200 MW</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- 4 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/wind.jpg"
+            alt="Жел электр станциясы"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                🌬️ Жел электр станциясы
+            </h2>
+
+            <p>
+                Жел электр станциясы желдің
+                кинетикалық энергиясын турбиналар
+                арқылы электр энергиясына
+                түрлендіреді.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>ЖЭС</strong>
+                </span>
+
+                <span>
+                    Қуаты:
+                    <strong>150 MW</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- 5 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/nuclear.jpg"
+            alt="Атом электр станциясы"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                ☢️ Атом электр станциясы
+            </h2>
+
+            <p>
+                Атом электр станциясында ядролық
+                реакция кезінде бөлінетін жылу
+                электр энергиясын өндіру үшін
+                пайдаланылады.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>АЭС</strong>
+                </span>
+
+                <span>
+                    Қуаты:
+                    <strong>1200 MW</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- 6 -->
+
+    <div class="station-card">
+
+        <img
+            src="images/transformer.jpg"
+            alt="Қосалқы станция"
+            class="station-image"
+        >
+
+        <div class="station-content">
+
+            <h2>
+                🔌 Қосалқы станция
+            </h2>
+
+            <p>
+                Қосалқы станция электр энергиясының
+                кернеуін түрлендіреді және оны
+                электр желілері арқылы тұтынушыларға
+                жеткізуді қамтамасыз етеді.
+            </p>
+
+            <div class="info">
+
+                <span>
+                    Түрі:
+                    <strong>ПС</strong>
+                </span>
+
+                <span>
+                    Кернеу:
+                    <strong>110 kV</strong>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+```
+
+</main>
+
+</body>
+
+</html>

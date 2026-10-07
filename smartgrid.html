@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Smart Grid | Energy Control</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #06152b, #0b2342, #07111f);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(5, 15, 30, 0.96);
+        padding: 25px 15px;
+        border-right: 1px solid rgba(0, 200, 255, 0.2);
+    }
+
+    .logo {
+        text-align: center;
+        color: #00d9ff;
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .menu button {
+        width: 100%;
+        padding: 14px;
+        margin: 6px 0;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        color: white;
+        text-align: left;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: rgba(0, 200, 255, 0.2);
+        transform: translateX(4px);
+    }
+
+    .menu .active {
+        background: rgba(0, 200, 255, 0.25);
+        border-left: 3px solid #00d9ff;
+    }
+
+    .main {
+        margin-left: 250px;
+        padding: 35px;
+    }
+
+    .header {
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        color: #00d9ff;
+        font-size: 32px;
+    }
+
+    .header p {
+        color: #9db2c9;
+        margin-top: 8px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,217,255,0.15);
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat .icon {
+        font-size: 35px;
+        margin-bottom: 10px;
+    }
+
+    .stat h3 {
+        color: #9db2c9;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .stat .value {
+        font-size: 25px;
+        font-weight: bold;
+        color: #00d9ff;
+    }
+
+    .network {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,217,255,0.15);
+        border-radius: 18px;
+        padding: 30px;
+        margin-bottom: 25px;
+    }
+
+    .network h2 {
+        color: #00d9ff;
+        margin-bottom: 25px;
+    }
+
+    .flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .node {
+        width: 145px;
+        height: 120px;
+        border-radius: 15px;
+        background: #10263e;
+        border: 2px solid #34516b;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: 0.4s;
+    }
+
+    .node:hover {
+        transform: translateY(-5px);
+        border-color: #00d9ff;
+        box-shadow: 0 0 20px rgba(0,217,255,0.3);
+    }
+
+    .node.active {
+        border-color: #00ff88;
+        box-shadow: 0 0 25px rgba(0,255,136,0.35);
+    }
+
+    .node-icon {
+        font-size: 38px;
+        margin-bottom: 8px;
+    }
+
+    .node-title {
+        font-weight: bold;
+    }
+
+    .node-status {
+        color: #00ff88;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .arrow {
+        color: #00d9ff;
+        font-size: 30px;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0%,100% {
+            opacity: 0.3;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .control-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    .control h2 {
+        color: #00d9ff;
+        margin-bottom: 20px;
+    }
+
+    .control p {
+        color: #b9cce0;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 13px 18px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        transform: scale(1.03);
+        opacity: 0.85;
+    }
+
+    .green {
+        background: #00a86b;
+    }
+
+    .blue {
+        background: #008cff;
+    }
+
+    .orange {
+        background: #d98900;
+    }
+
+    .red {
+        background: #d83b3b;
+    }
+
+    .status {
+        padding: 18px;
+        background: rgba(0,200,120,0.1);
+        border: 1px solid rgba(0,255,136,0.2);
+        border-radius: 12px;
+        color: #00ff88;
+        margin-top: 15px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .advantages {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .advantage {
+        padding: 20px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .advantage h3 {
+        color: #00d9ff;
+        margin-bottom: 10px;
+    }
+
+    .advantage p {
+        color: #aebed0;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 1000px) {
+        .grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .flow {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+```
+<div class="logo">
+    ⚡ ENERGY CONTROL
+</div>
+
+<div class="menu">
+
+    <button onclick="location.href='dashboard.html'">
+        🏠 Dashboard
+    </button>
+
+    <button onclick="location.href='stations.html'">
+        ⚡ Электр станциялары
+    </button>
+
+    <button class="active">
+        🔌 Smart Grid
+    </button>
+
+    <button onclick="location.href='scada.html'">
+        🖥️ SCADA
+    </button>
+
+    <button onclick="location.href='calculator.html'">
+        🧮 Калькулятор
+    </button>
+
+    <button onclick="location.href='lab.html'">
+        🧪 Лаборатория
+    </button>
+
+    <button onclick="location.href='test.html'">
+        📝 Тест
+    </button>
+
+</div>
+```
+
+</div>
+
+<div class="main">
+
+```
+<div class="header">
+    <h1>🔌 Smart Grid Control Center</h1>
+    <p>Ақылды электр желісін бақылау және басқару жүйесі</p>
+</div>
+
+
+<!-- Статистика -->
+
+<div class="grid">
+
+    <div class="card stat">
+        <div class="icon">⚡</div>
+        <h3>Желі қуаты</h3>
+        <div class="value" id="gridPower">7450 MW</div>
+    </div>
+
+    <div class="card stat">
+        <div class="icon">🏠</div>
+        <h3>Тұтыну</h3>
+        <div class="value" id="consumption">6820 MW</div>
+    </div>
+
+    <div class="card stat">
+        <div class="icon">🌱</div>
+        <h3>Жасыл энергия</h3>
+        <div class="value">38%</div>
+    </div>
+
+    <div class="card stat">
+        <div class="icon">📡</div>
+        <h3>Желі жағдайы</h3>
+        <div class="value" id="networkStatus">NORMAL</div>
+    </div>
+
+</div>
+
+
+<!-- Smart Grid схемасы -->
+
+<div class="network">
+
+    <h2>🌐 Smart Grid Network</h2>
+
+    <div class="flow">
+
+        <div class="node active" id="station">
+            <div class="node-icon">🏭</div>
+            <div class="node-title">Station</div>
+            <div class="node-status">ONLINE</div>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node active" id="transformer">
+            <div class="node-icon">⚡</div>
+            <div class="node-title">Transformer</div>
+            <div class="node-status">ONLINE</div>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node active" id="gridNode">
+            <div class="node-icon">🔌</div>
+            <div class="node-title">Smart Grid</div>
+            <div class="node-status">ONLINE</div>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="node active" id="consumer">
+            <div class="node-icon">🏠</div>
+            <div class="node-title">Consumer</div>
+            <div class="node-status">ONLINE</div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Басқару -->
+
+<div class="control-grid">
+
+    <div class="card control">
+
+        <h2>🎛️ Grid Control</h2>
+
+        <p>
+            Smart Grid жүйесінің негізгі жұмыс режимін таңдаңыз.
+            Жүйе электр энергиясын өндіру, тарату және тұтынуды
+            интеллектуалды түрде басқаруға мүмкіндік береді.
+        </p>
+
+        <div class="buttons">
+
+            <button class="btn green" onclick="normalMode()">
+                🟢 Normal
+            </button>
+
+            <button class="btn blue" onclick="ecoMode()">
+                🌱 Eco Mode
+            </button>
+
+            <button class="btn orange" onclick="highLoad()">
+                ⚠️ High Load
+            </button>
+
+            <button class="btn red" onclick="emergency()">
+                🚨 Emergency
+            </button>
+
+        </div>
+
+        <div class="status" id="controlStatus">
+            🟢 SMART GRID NORMAL
+        </div>
+
+    </div>
+
+
+    <div class="card control">
+
+        <h2>📊 Energy Management</h2>
+
+        <p>
+            Smart Grid энергия ағынын автоматты түрде бақылап,
+            жүктемені талдайды және энергия ресурстарын тиімді
+            пайдалануға көмектеседі.
+        </p>
+
+        <div class="status">
+            ☀️ Solar: 80%<br><br>
+            🌬️ Wind: 60%<br><br>
+            💧 Hydro: 90%<br><br>
+            🔥 Thermal: 72%
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Артықшылықтары -->
+
+<div class="advantages">
+
+    <div class="advantage">
+        <h3>⚡ Автоматты басқару</h3>
+        <p>
+            Электр желісіндегі өзгерістерді бақылап,
+            жүйенің жұмыс режимін автоматты түрде реттейді.
+        </p>
+    </div>
+
+    <div class="advantage">
+        <h3>🌱 Энергия тиімділігі</h3>
+        <p>
+            Жаңартылатын энергия көздерін тиімді пайдаланып,
+            энергия шығынын азайтуға мүмкіндік береді.
+        </p>
+    </div>
+
+    <div class="advantage">
+        <h3>📡 Real-Time Monitoring</h3>
+        <p>
+            Электр желісінің жағдайын нақты уақытта бақылауға
+            және ақауларды жылдам анықтауға болады.
+        </p>
+    </div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+function normalMode() {
+
+    document.getElementById("controlStatus").innerHTML =
+        "🟢 SMART GRID NORMAL — Жүйе қалыпты режимде";
+
+    document.getElementById("controlStatus").style.color =
+        "#00ff88";
+
+    document.getElementById("networkStatus").innerText =
+        "NORMAL";
+
+    activateNodes();
+}
+
+
+function ecoMode() {
+
+    document.getElementById("controlStatus").innerHTML =
+        "🌱 ECO MODE — Жасыл энергия басым режим";
+
+    document.getElementById("controlStatus").style.color =
+        "#00ff88";
+
+    document.getElementById("networkStatus").innerText =
+        "ECO";
+
+    activateNodes();
+}
+
+
+function highLoad() {
+
+    document.getElementById("controlStatus").innerHTML =
+        "⚠️ HIGH LOAD — Желі жүктемесі жоғары";
+
+    document.getElementById("controlStatus").style.color =
+        "#ffb000";
+
+    document.getElementById("networkStatus").innerText =
+        "HIGH";
+
+    activateNodes();
+}
+
+
+function emergency() {
+
+    document.getElementById("controlStatus").innerHTML =
+        "🚨 EMERGENCY — Авариялық режим іске қосылды";
+
+    document.getElementById("controlStatus").style.color =
+        "#ff5555";
+
+    document.getElementById("networkStatus").innerText =
+        "ALARM";
+
+    document.querySelectorAll(".node").forEach(function(node) {
+        node.classList.remove("active");
+    });
+}
+
+
+function activateNodes() {
+
+    document.querySelectorAll(".node").forEach(function(node) {
+        node.classList.add("active");
+    });
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+
+<html lang="kk">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Электр калькуляторы | Energy Control</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #071525;
+        color: white;
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+
+        width: 250px;
+        height: 100vh;
+
+        background: #091d32;
+
+        border-right: 1px solid #173958;
+
+        padding: 25px 15px;
+    }
+
+    .logo {
+        text-align: center;
+
+        font-size: 22px;
+
+        font-weight: bold;
+
+        color: #00d9ff;
+
+        margin-bottom: 35px;
+    }
+
+    .logo span {
+        color: white;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin: 8px 0;
+    }
+
+    .menu button {
+        width: 100%;
+
+        padding: 14px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background: transparent;
+
+        color: #a9bed3;
+
+        text-align: left;
+
+        font-size: 15px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .menu button:hover {
+        background: #103552;
+
+        color: #00d9ff;
+    }
+
+    .menu .active {
+        background: #103552;
+
+        color: #00d9ff;
+    }
+
+    .logout {
+        position: absolute;
+
+        bottom: 25px;
+
+        left: 15px;
+
+        width: 220px;
+
+        padding: 12px;
+
+        border: 1px solid #244764;
+
+        border-radius: 10px;
+
+        background: transparent;
+
+        color: #ff7272;
+
+        cursor: pointer;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main {
+        margin-left: 250px;
+
+        padding: 35px;
+    }
+
+    .header {
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 30px;
+
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        color: #7894ad;
+    }
+
+    /* ================= CALCULATORS ================= */
+
+    .calculators {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 22px;
+    }
+
+    .calculator {
+        background: #0b2137;
+
+        border: 1px solid #173b59;
+
+        border-radius: 18px;
+
+        padding: 25px;
+
+        transition: 0.3s;
+    }
+
+    .calculator:hover {
+        border-color: #00cfff;
+
+        box-shadow:
+            0 10px 30px
+            rgba(0, 200, 255, 0.08);
+    }
+
+    .calculator h2 {
+        font-size: 20px;
+
+        margin-bottom: 8px;
+    }
+
+    .formula {
+        display: inline-block;
+
+        padding: 8px 12px;
+
+        background: #102d46;
+
+        color: #00d9ff;
+
+        border-radius: 8px;
+
+        margin-bottom: 20px;
+
+        font-weight: bold;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        display: block;
+
+        color: #8ca6ba;
+
+        font-size: 13px;
+
+        margin-bottom: 7px;
+    }
+
+    .input-group input {
+        width: 100%;
+
+        padding: 13px;
+
+        background: #061724;
+
+        border: 1px solid #234862;
+
+        border-radius: 9px;
+
+        outline: none;
+
+        color: white;
+
+        font-size: 15px;
+    }
+
+    .input-group input:focus {
+        border-color: #00d9ff;
+
+        box-shadow:
+            0 0 10px
+            rgba(0, 217, 255, 0.15);
+    }
+
+    .calculate {
+        width: 100%;
+
+        padding: 13px;
+
+        border: none;
+
+        border-radius: 9px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #007bff,
+                #00d9ff
+            );
+
+        color: white;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        margin-top: 5px;
+    }
+
+    .calculate:hover {
+        box-shadow:
+            0 0 18px
+            rgba(0, 217, 255, 0.35);
+    }
+
+    .result {
+        margin-top: 15px;
+
+        padding: 14px;
+
+        background: #092a22;
+
+        border: 1px solid #167d5b;
+
+        border-radius: 9px;
+
+        color: #55e3aa;
+
+        min-height: 48px;
+    }
+
+    /* ================= THEORY ================= */
+
+    .theory {
+        margin-top: 25px;
+
+        background: #0b2137;
+
+        border: 1px solid #173b59;
+
+        border-radius: 18px;
+
+        padding: 25px;
+    }
+
+    .theory h2 {
+        margin-bottom: 15px;
+    }
+
+    .theory p {
+        color: #9bb0c2;
+
+        line-height: 1.7;
+    }
+
+    .formula-list {
+        margin-top: 15px;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 12px;
+    }
+
+    .formula-item {
+        background: #102d46;
+
+        padding: 15px;
+
+        border-radius: 10px;
+
+        text-align: center;
+
+        color: #a9bed3;
+    }
+
+    .formula-item strong {
+        display: block;
+
+        color: #00d9ff;
+
+        font-size: 18px;
+
+        margin-bottom: 6px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 950px) {
+
+        .calculators {
+            grid-template-columns: 1fr;
+        }
+
+        .formula-list {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 700px) {
+
+        .sidebar {
+            position: relative;
+
+            width: 100%;
+
+            height: auto;
+        }
+
+        .logout {
+            position: relative;
+
+            left: 0;
+
+            bottom: 0;
+
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+        .main {
+            margin-left: 0;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+```
+<div class="logo">
+    ⚡ <span>ENERGY</span>
+</div>
+
+
+<ul class="menu">
+
+    <li>
+
+        <button
+            onclick="location.href='dashboard.html'">
+
+            🏠 Dashboard
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='stations.html'">
+
+            ⚡ Электр станциялары
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='smartgrid.html'">
+
+            🔌 Smart Grid
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='scada.html'">
+
+            🖥️ SCADA
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button class="active">
+
+            🧮 Калькулятор
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='lab.html'">
+
+            🧪 Лаборатория
+
+        </button>
+
+    </li>
+
+
+    <li>
+
+        <button
+            onclick="location.href='test.html'">
+
+            📝 Тест
+
+        </button>
+
+    </li>
+
+</ul>
+
+
+<button
+    class="logout"
+    onclick="location.href='index.html'">
+
+    🚪 Шығу
+
+</button>
+```
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+```
+<div class="header">
+
+    <h1>
+        🧮 Электр есептеу калькуляторы
+    </h1>
+
+    <p>
+        Электрлік шамаларды автоматты түрде есептеу
+    </p>
+
+</div>
+
+
+<!-- ================= CALCULATORS ================= -->
+
+<div class="calculators">
+
+
+    <!-- POWER -->
+
+    <div class="calculator">
+
+        <h2>
+            ⚡ Электр қуаты
+        </h2>
+
+        <div class="formula">
+            P = U × I
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Кернеу U (V)
+            </label>
+
+            <input
+                type="number"
+                id="powerU"
+                placeholder="Мысалы: 220"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Ток I (A)
+            </label>
+
+            <input
+                type="number"
+                id="powerI"
+                placeholder="Мысалы: 5"
+            >
+
+        </div>
+
+
+        <button
+            class="calculate"
+            onclick="calculatePower()">
+
+            Есептеу
+
+        </button>
+
+
+        <div
+            class="result"
+            id="powerResult">
+
+            Нәтиже осында шығады
+
+        </div>
+
+    </div>
+
+
+    <!-- CURRENT -->
+
+    <div class="calculator">
+
+        <h2>
+            🔌 Электр тогы
+        </h2>
+
+        <div class="formula">
+            I = P / U
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Қуат P (W)
+            </label>
+
+            <input
+                type="number"
+                id="currentP"
+                placeholder="Мысалы: 1100"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Кернеу U (V)
+            </label>
+
+            <input
+                type="number"
+                id="currentU"
+                placeholder="Мысалы: 220"
+            >
+
+        </div>
+
+
+        <button
+            class="calculate"
+            onclick="calculateCurrent()">
+
+            Есептеу
+
+        </button>
+
+
+        <div
+            class="result"
+            id="currentResult">
+
+            Нәтиже осында шығады
+
+        </div>
+
+    </div>
+
+
+    <!-- RESISTANCE -->
+
+    <div class="calculator">
+
+        <h2>
+            🌀 Кедергі
+        </h2>
+
+        <div class="formula">
+            R = U / I
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Кернеу U (V)
+            </label>
+
+            <input
+                type="number"
+                id="resistanceU"
+                placeholder="Мысалы: 220"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Ток I (A)
+            </label>
+
+            <input
+                type="number"
+                id="resistanceI"
+                placeholder="Мысалы: 10"
+            >
+
+        </div>
+
+
+        <button
+            class="calculate"
+            onclick="calculateResistance()">
+
+            Есептеу
+
+        </button>
+
+
+        <div
+            class="result"
+            id="resistanceResult">
+
+            Нәтиже осында шығады
+
+        </div>
+
+    </div>
+
+
+    <!-- ENERGY -->
+
+    <div class="calculator">
+
+        <h2>
+            🔋 Электр энергиясы
+        </h2>
+
+        <div class="formula">
+            W = P × t
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Қуат P (kW)
+            </label>
+
+            <input
+                type="number"
+                id="energyP"
+                placeholder="Мысалы: 2"
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Уақыт t (сағат)
+            </label>
+
+            <input
+                type="number"
+                id="energyT"
+                placeholder="Мысалы: 5"
+            >
+
+        </div>
+
+
+        <button
+            class="calculate"
+            onclick="calculateEnergy()">
+
+            Есептеу
+
+        </button>
+
+
+        <div
+            class="result"
+            id="energyResult">
+
+            Нәтиже осында шығады
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= THEORY ================= -->
+
+<div class="theory">
+
+    <h2>
+        📚 Негізгі электр формулалары
+    </h2>
+
+    <p>
+        Электр энергетикасында негізгі электрлік
+        шамаларды есептеу үшін кернеу, ток, қуат,
+        кедергі және уақыт арасындағы математикалық
+        байланыстар қолданылады.
+    </p>
+
+
+    <div class="formula-list">
+
+        <div class="formula-item">
+
+            <strong>P = U × I</strong>
+
+            Электр қуаты
+
+        </div>
+
+
+        <div class="formula-item">
+
+            <strong>I = P / U</strong>
+
+            Электр тогы
+
+        </div>
+
+
+        <div class="formula-item">
+
+            <strong>R = U / I</strong>
+
+            Электр кедергісі
+
+        </div>
+
+
+        <div class="formula-item">
+
+            <strong>U = I × R</strong>
+
+            Кернеу
+
+        </div>
+
+
+        <div class="formula-item">
+
+            <strong>W = P × t</strong>
+
+            Электр энергиясы
+
+        </div>
+
+
+        <div class="formula-item">
+
+            <strong>P = W / t</strong>
+
+            Қуатты анықтау
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</main>
+
+<script>
+
+
+/* ================= POWER ================= */
+
+function calculatePower() {
+
+    let U =
+        parseFloat(
+            document.getElementById(
+                "powerU"
+            ).value
+        );
+
+    let I =
+        parseFloat(
+            document.getElementById(
+                "powerI"
+            ).value
+        );
+
+
+    if (
+        isNaN(U) ||
+        isNaN(I) ||
+        U <= 0 ||
+        I <= 0
+    ) {
+
+        document.getElementById(
+            "powerResult"
+        ).innerText =
+            "❌ Дұрыс мән енгізіңіз.";
+
+        return;
+
+    }
+
+
+    let P = U * I;
+
+
+    document.getElementById(
+        "powerResult"
+    ).innerText =
+        "✅ P = " +
+        P.toFixed(2) +
+        " W";
+
+}
+
+
+/* ================= CURRENT ================= */
+
+function calculateCurrent() {
+
+    let P =
+        parseFloat(
+            document.getElementById(
+                "currentP"
+            ).value
+        );
+
+    let U =
+        parseFloat(
+            document.getElementById(
+                "currentU"
+            ).value
+        );
+
+
+    if (
+        isNaN(P) ||
+        isNaN(U) ||
+        P <= 0 ||
+        U <= 0
+    ) {
+
+        document.getElementById(
+            "currentResult"
+        ).innerText =
+            "❌ Дұрыс мән енгізіңіз.";
+
+        return;
+
+    }
+
+
+    let I = P / U;
+
+
+    document.getElementById(
+        "currentResult"
+    ).innerText =
+        "✅ I = " +
+        I.toFixed(2) +
+        " A";
+
+}
+
+
+/* ================= RESISTANCE ================= */
+
+function calculateResistance() {
+
+    let U =
+        parseFloat(
+            document.getElementById(
+                "resistanceU"
+            ).value
+        );
+
+    let I =
+        parseFloat(
+            document.getElementById(
+                "resistanceI"
+            ).value
+        );
+
+
+    if (
+        isNaN(U) ||
+        isNaN(I) ||
+        U <= 0 ||
+        I <= 0
+    ) {
+
+        document.getElementById(
+            "resistanceResult"
+        ).innerText =
+            "❌ Дұрыс мән енгізіңіз.";
+
+        return;
+
+    }
+
+
+    let R = U / I;
+
+
+    document.getElementById(
+        "resistanceResult"
+    ).innerText =
+        "✅ R = " +
+        R.toFixed(2) +
+        " Ω";
+
+}
+
+
+/* ================= ENERGY ================= */
+
+function calculateEnergy() {
+
+    let P =
+        parseFloat(
+            document.getElementById(
+                "energyP"
+            ).value
+        );
+
+    let t =
+        parseFloat(
+            document.getElementById(
+                "energyT"
+            ).value
+        );
+
+
+    if (
+        isNaN(P) ||
+        isNaN(t) ||
+        P <= 0 ||
+        t <= 0
+    ) {
+
+        document.getElementById(
+            "energyResult"
+        ).innerText =
+            "❌ Дұрыс мән енгізіңіз.";
+
+        return;
+
+    }
+
+
+    let W = P * t;
+
+
+    document.getElementById(
+        "energyResult"
+    ).innerText =
+        "✅ W = " +
+        W.toFixed(2) +
+        " kWh";
+
+}
+
+
+</script>
+
+</body>
+
+</html>
